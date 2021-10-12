@@ -1,0 +1,23 @@
+
+Topics in LDA model:
+==========
+Topic #0: medication taking take orilissa prescribed visanne med drug effect side
+Topic #1: chronic single illness developed person diagnosis causing health issue life
+Topic #2: help hi thanks advice wondering experience thank everyone advance appreciated
+Topic #3: else symptom experienced experience wondering something related similar fatigue experiencing
+Topic #4: weight diet food eat eating exercise body stomach bloating lot
+Topic #5: right back left pelvic ultrasound ovary side cyst lower bowel
+Topic #6: covid nt surgery still since break office told appointment take
+Topic #7: week went bleeding back said started got ago told last
+Topic #8: sex painful make really want during hurt always even partner
+Topic #9: side effect treatment shot lupron dont depo menopause hormone option
+Topic #10: woman people love other share experience hear support everyone medical
+Topic #11: nt week night hour work last back hurt much bad
+Topic #12: told go got said even went take finally work home
+Topic #13: control birth pill iud bc taking since bleeding take started
+Topic #14: cramp symptom heavy painful bad during always cycle last since
+Topic #15: surgery lap surgeon removed excision first week found laparoscopy stage
+Topic #16: really thing much flare work bad going want feeling worse
+Topic #17: nt want even really told symptom go said think see
+Topic #18: cyst ovary recovery belly ovarian endometrioma large left surgery ivf
+Topic #19: amp http community study research link please uk question information

@@ -1,0 +1,23 @@
+
+Topics in LDA model:
+==========
+Topic #0: cyst ovary ultrasound left surgery right uterus found said removed
+Topic #1: get didn like bad period else really cramp haven doesn
+Topic #2: help work day really advice week get much time take
+Topic #3: symptom year doctor endometriosis period diagnosed get issue diagnosis like
+Topic #4: control birth year get pregnant want doctor month period trying
+Topic #5: eat weight diet food eating body exercise drink change help
+Topic #6: pelvic lower back floor leg physical side right muscle hip
+Topic #7: sex bowel painful during bladder movement feel sometimes experience like
+Topic #8: iud mirena month pill effect year lupron side bc nt
+Topic #9: back week month ago day last went year time started
+Topic #10: surgery lap excision first surgeon recovery week laparoscopy know going
+Topic #11: endometriosis hysterectomy woman treatment research doctor http dr medical disease
+Topic #12: amp experience thank people x200b share everyone hi story thanks
+Topic #13: flare take pill taking anxiety medication health depression effect gynaecologist
+Topic #14: nausea stomach symptom bloating fatigue gas feel like headache extreme
+Topic #15: like feel day get nt time even much hour go
+Topic #16: nt know want like feel really even get life think
+Topic #17: period day bleeding month cramp started heavy week first normal
+Topic #18: appointment specialist gyno get nt waiting gp see wait month
+Topic #19: doctor told said finally like even know got appointment feel

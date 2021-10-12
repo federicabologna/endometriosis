@@ -1,0 +1,18 @@
+
+Topics in LDA model:
+==========
+Topic #0: really want thing even think make help symptom going much
+Topic #1: stomach belly dont eat bloating bloated food look gas ive
+Topic #2: amp endometriosis pelvic http experience people other help woman x200b
+Topic #3: lap surgery specialist appointment first laparoscopy going find nervous want
+Topic #4: said told got went felt back go hospital even call
+Topic #5: pregnant weight kid want child hysterectomy fertility trying baby pregnancy
+Topic #6: pad help heating take use couldn ibuprofen hot recommendation med
+Topic #7: control birth pill iud bc since mirena symptom taking bleeding
+Topic #8: work much even week go want really need take hour
+Topic #9: surgery excision surgeon removed ovary lap found uterus recovery bowel
+Topic #10: experience week wondering else thanks everyone hi really lap ago
+Topic #11: cramp sex symptom painful during bad started back always last
+Topic #12: bleeding blood week ultrasound normal test back see appointment said
+Topic #13: cyst ovary ultrasound left right symptom side back endometriosis bladder
+Topic #14: effect side taking lupron shot visanne orilissa medication take treatment
