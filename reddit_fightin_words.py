@@ -108,6 +108,8 @@ def bayes_compare_language(l1, l2, output_path, ngram=1, prior=.01, cv=None, sig
     sorted_indices = np.argsort(z_scores)
     return_list = [(index_to_term[i], z_scores[i]) for i in sorted_indices]
     
+
+    # plotting z scores and frequencies
     x_vals = count_matrix.sum(axis=0)
     y_vals = z_scores
     sizes = abs(z_scores) * 2
@@ -145,6 +147,7 @@ def main(subreddit_1, subreddit_2):
 
     output_path = os.path.join(os.getcwd(), 'output', f'{subreddit_1}'+ '_vs_' + f'{subreddit_2}')
 
+    # GET TWO CLASSES OF DOCUMENTS TO COMPARE
     document_1 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_1}.csv')
     document_2 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_2}.csv')
 
@@ -160,6 +163,7 @@ def main(subreddit_1, subreddit_2):
     list_1 = clean_posts_1
     list_2 = clean_posts_2
 
+    # PERFORM FIGHTIN WORDS ON TWO CLASSES
     output_list = bayes_compare_language(list_1, list_2, output_path)
 
     z_scores_df = pd.DataFrame(output_list)
@@ -167,7 +171,7 @@ def main(subreddit_1, subreddit_2):
 
     return output_list
 
-
+# RUNNING MAIN WILL CLEAN TWO DATASETS, PERFORM FIGHTIN WORDS, AND OUTPUT A CSV WITH WORD-ZSCORE PAIR AND PLOTTED RESULTS
 
 if __name__ == '__main__':
     main('endometriosis', 'pcos')
