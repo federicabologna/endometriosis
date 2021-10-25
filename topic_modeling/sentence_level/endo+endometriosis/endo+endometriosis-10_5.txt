@@ -1,0 +1,33 @@
+
+Topics in LDA model: 10 topics 5 removed top words
+
+Topic 0
+take help feel try want like make know work well
+
+Topic 1
+control birth take pill try month help year stop effect
+
+Topic 2
+period day year month week start last bad since ago
+
+Topic 3
+endo know like symptom think endometriosis doctor feel say other
+
+Topic 4
+doctor go surgery see appointment say tell specialist lap endo
+
+Topic 5
+thank experience advice help hi everyone else know want sorry
+
+Topic 6
+feel like back low pelvic bad right period cramp side
+
+Topic 7
+endo cyst ovary remove ultrasound find endometriosis surgery diagnose say
+
+Topic 8
+day go hour take time like feel work night bed
+
+Topic 9
+feel go like time want work know life really think
+

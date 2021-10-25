@@ -1,0 +1,48 @@
+
+Topics in LDA model: 15 topics 5 removed top words
+
+Topic 0
+endo cyst ovary remove surgery diagnose year find endometriosis lap
+
+Topic 1
+feel like back low right side hurt leg area bad
+
+Topic 2
+period day month week last start time 2 bleed 3
+
+Topic 3
+period year bad since symptom painful start during sex cramp
+
+Topic 4
+say ultrasound doctor go test tell see pelvic back normal
+
+Topic 5
+eat weight diet food make try help lose gain change
+
+Topic 6
+take help feel like make use work even much try
+
+Topic 7
+endo symptom know else endometriosis experience think like other issue
+
+Topic 8
+surgery week go month appointment lap see first next doctor
+
+Topic 9
+thank experience advice hi help everyone know else sorry story
+
+Topic 10
+control birth pill take month year try stop help period
+
+Topic 11
+go day work time hour bad night bed sleep pad
+
+Topic 12
+want know go surgery try doctor take say really tell
+
+Topic 13
+doctor see go specialist find surgery insurance ask endo good
+
+Topic 14
+feel like know make really life want go time think
+

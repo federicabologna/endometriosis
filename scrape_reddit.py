@@ -75,7 +75,7 @@ def main():
     if not os.path.exists(base_path):
         os.makedirs(base_path)
 
-    target_subreddits = ['endo', 'endometriosis', 'pcos']
+    target_subreddits = ['endo', 'chronic-conditions', 'pcos']
     # target_type = 'comments' 
     target_type = 'posts'
 
@@ -133,5 +133,5 @@ def aggregating(subreddits):
 
 if __name__ == '__main__':
     #main()
-    aggregating(['endo'])#['endo', 'endometriosis', 'pcos'])
+    aggregating(['endo'])#['endo', 'chronic-conditions', 'pcos'])
 # ['chronicillness', 'pots', 'dysautonomia', 'diabetes_t1', 'diabetes_t2', 'asthma', 'crohnsdisease', 'kidneydisease']

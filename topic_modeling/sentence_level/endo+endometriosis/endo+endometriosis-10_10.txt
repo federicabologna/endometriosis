@@ -1,0 +1,33 @@
+
+Topics in LDA model: 10 topics 10 removed top words
+
+Topic 0
+experience thank know else help advice everyone hi want read
+
+Topic 1
+symptom endometriosis think say test doctor issue know cause tell
+
+Topic 2
+cyst ovary remove find surgery ultrasound endometriosis uterus say right
+
+Topic 3
+know make really want life work time much think bad
+
+Topic 4
+week surgery month year lap ago first last appointment see
+
+Topic 5
+day month bad year start last week time cramp painful
+
+Topic 6
+take day help work eat try use pad hour even
+
+Topic 7
+back low bad right hurt side cramp leg sometimes pelvic
+
+Topic 8
+doctor say want tell surgery know see find try ask
+
+Topic 9
+control birth pill take year try month help stop start
+
