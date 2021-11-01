@@ -34,9 +34,9 @@ def cleaning_docs(df, docs_file):
                 clean_lemma = re.sub(r'[\n+\s+]', '', clean_lemma)
                 if clean_lemma and clean_lemma not in stopwords:
                     clean_sent.append(clean_lemma)
-            if clean_sent:
+            if len(clean_sent) > 4:
                 vocab.update(clean_sent)
-                docs_d[sent_id] = [clean_sent, post_url]
+                docs_d[sent_id] = [clean_sent, sent.text, post_url]
 
     with open(docs_file, 'w') as jsonfile:
         json.dump(docs_d, jsonfile)
@@ -47,7 +47,7 @@ def cleaning_docs(df, docs_file):
     return docs_d
 
 
-def perform_tm(s_ids, corpus, s_urls, n_topics, rm_top, topwords_file):
+def perform_tm(s_ids, corpus, n_topics, rm_top, topwords_file):
 
     lda_model = tp.LDAModel(k=n_topics, min_df=3, rm_top=rm_top)
     vocab = set()
@@ -56,7 +56,7 @@ def perform_tm(s_ids, corpus, s_urls, n_topics, rm_top, topwords_file):
         vocab.update(doc)
     print('Num docs:{}'.format(len(lda_model.docs)))
     print("Vocabulary Size: {}".format(len(list(vocab))))
-    print('Removed Top words: ', *lda_model.removed_top_words)
+    print('Removed Top words: ', lda_model.removed_top_words)
 
     iterations = 10
     for i in range(0, 100, iterations):
@@ -79,7 +79,7 @@ def perform_tm(s_ids, corpus, s_urls, n_topics, rm_top, topwords_file):
     #TOPIC DISTRIBUTIONS
     topic_distributions = [list(doc.get_topic_dist()) for doc in lda_model.docs]
     topic_results = []
-    for s_id, topic_distribution in zip(s_ids, topic_distributions):
+    for topic_distribution in topic_distributions:
         topic_results.append({'topic_distribution': topic_distribution})
     df = pd.DataFrame(topic_results, index=s_ids)
     column_names = [f"Topic {number} {' '.join(topic[:4])}" for number, topic in enumerate(topic_individual_words)]
@@ -114,29 +114,31 @@ def main(subreddit):
             docs_dict = json.load(json_file)
     doc_ids = [doc_id for doc_id in docs_dict.keys()]
     clean_docs = [sent_url[0] for sent_url in docs_dict.values()]
-    doc_urls = [sent_url[1] for sent_url in docs_dict.values()]
+    og_docs = [[sent_url[1]] for sent_url in docs_dict.values()]
+    #doc_urls = [sent_url[2] for sent_url in docs_dict.values()]
     print(f'{str(datetime.now())}________________{str(datetime.now() - start)}\n')
 
     #PERFORMING TOPIC MODELING
-    for num_topics in [5, 10, 15]:  # number of topics, use larger value for larger corpora
-        for rm_frequent in [5, 10]:  # keep words that appear on no more than x fraction of pages, removes high-frequency words
+    for num_topics in [7, 10, 15]:  # number of topics, use larger value for larger corpora
+        for rm_frequent in [15]:  # keep words that appear on no more than x fraction of pages, removes high-frequency words
 
             txt_topwords = os.path.join(tomo_sub_folder, f'{subreddit}-{num_topics}_{rm_frequent}.txt')
             #html_viz = os.path.join(tomo_sub_folder, f'{subreddit}-{num_topics}_{rm_frequent}.html')
             csv_dtm_small = os.path.join(tomo_sub_folder, f'{subreddit}-{num_topics}_{rm_frequent}.csv')
-            csv_dtm_large = os.path.join(tomo_sub_folder, f'{subreddit}-{num_topics}_{rm_frequent}_large.csv')
+            #csv_dtm_large = os.path.join(tomo_sub_folder, f'{subreddit}-{num_topics}_{rm_frequent}_large.tsv')
 
             if not os.path.exists(txt_topwords) or not os.path.exists(csv_dtm_small): #or not os.path.exists(html_viz):
-                start = datetime.now()
 
                 # PERFORM TOPIC MODELING AND GET DOC-TOPIC MATRIX
+                start = datetime.now()
                 print("Performing Topic Modeling...")
                 start = datetime.now()
-                lda_dtm = perform_tm(doc_ids, clean_docs, doc_urls, num_topics, rm_frequent, txt_topwords)
+                lda_dtm = perform_tm(doc_ids, clean_docs, num_topics, rm_frequent, txt_topwords)
+                lda_dtm['sent'] = og_docs
                 lda_dtm.to_csv(csv_dtm_small)
-                lda_dtm['lemm_sent'] = clean_docs
-                lda_dtm['post_url'] = doc_urls
-                lda_dtm.to_csv(csv_dtm_large)
+                #lda_dtm['post_url'] = doc_urls
+                #lda_dtm['lemm_sent'] = clean_docs
+                #lda_dtm.to_csv(csv_dtm_large)
                 print(f'{str(datetime.now())}____Topic modeling {num_topics}, {rm_frequent} time:____{str(datetime.now() - start)}\n')
 
 
