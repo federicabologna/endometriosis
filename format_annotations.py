@@ -45,16 +45,15 @@ def check_if_value_present(df_cell, label = 'DOCTORS'):
 for col_name in label_names:
     annotations_df[col_name] = annotations_df['accept'].apply(check_if_value_present, label = col_name)
 
-#############################################################################################
-#############################################################################################
-#############################################################################################
 
 for label in label_names:
     print('Balance of '+ str(label) + ' is: ' + str(Counter(annotations_df[label])))
 
 
-# GET TF IDF STRUCTURE
 
+#############################################################################################
+# GET TF IDF STRUCTURE AND ASSESS ACCURACY
+#############################################################################################
 
 vectorizer = TfidfVectorizer(
     encoding='utf-8',
