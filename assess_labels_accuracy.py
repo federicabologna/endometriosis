@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import json
 from collections import defaultdict, Counter
+from datetime import datetime
 
 from nltk.stem import WordNetLemmatizer
 import nltk
@@ -45,11 +46,12 @@ def get_file_paths_for_label(label_type = "relations"):
         output_csv_name = 'intent.csv'   
 
     input_path = os.getcwd()
+    output_path = os.path.join(input_path, 'labeling', 'prodigy', 'output')
     labels_file_path = os.path.join(input_path, 'labeling', 'prodigy', labels_file_name)
     annotations_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', annotation_file_name)
-    output_csv_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', 'ordered_csvs', output_csv_name)
+    output_csv_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', 'formatted_csvs', output_csv_name)
 
-    return labels_file_path, annotations_path, output_csv_path
+    return output_path, labels_file_path, annotations_path, output_csv_path
 
 
 
@@ -70,7 +72,7 @@ Note: expects files are located in following tree structure: input_path/labeling
 '''
 
 def format_raw_annotations(label_type = "relations"):
-    labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+    output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
     annotations = []
     for line in open(annotations_path, 'r'):
         annotations.append(json.loads(line))
@@ -111,7 +113,7 @@ Output:
 '''
 
 def get_label_stats(label_type = "relations"):
-    labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+    output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
     with open(labels_file_path) as file:
         lines = file.readlines()
         label_names = [line.rstrip() for line in lines]
@@ -141,7 +143,7 @@ def load_annotations(label_type = "relations"):
         csv_name = 'intent.csv'   
 
     input_path = os.getcwd()
-    csv_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', 'ordered_csvs', csv_name)
+    csv_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', 'formatted_csvs', csv_name)
     annotations_df = pd.read_csv(csv_path)
 
     return annotations_df
@@ -155,13 +157,14 @@ Input:
     label_type: type of label
 
 Output:
-    - plots increase in accuracy 
+    - plots increase in f1 accuracy 
+    - saves plot to output 
 
 Note: Loads formatted annotations csv. 
 '''
 
 def classification_accuracy_by_data_amount(label_type = "relations"):
-    labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+    output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
     annotations_df = pd.read_csv(output_csv_path)
     # read labels from text file
     with open(labels_file_path) as file:
@@ -204,6 +207,7 @@ def classification_accuracy_by_data_amount(label_type = "relations"):
                 label_values.append(label)
             
             sns.lineplot(x = x_values, y = y_values)
+            plt.savefig(output_path + '/figures/accuracy_progress', dpi = 300)
         except ValueError:
                 print("Not enough data about "+ str(label))
                 continue
@@ -224,7 +228,7 @@ Note: Loads formatted annotations csv.
 
 '''
 def get_accuracy_metrics(label_type = "relations"):
-    labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+    output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
     annotations_df = pd.read_csv(output_csv_path)
     # read labels from text file
     with open(labels_file_path) as file:
@@ -252,7 +256,35 @@ def get_accuracy_metrics(label_type = "relations"):
     for label in label_names:
         y = annotations_df[label]
         stored = cross_validate(lr, X, y, cv=5, scoring=['precision', 'f1', 'recall'])
-        accuracy = [label, stored]
-        accuracy_list.append(accuracy)
+        stored["label_name"] = label
+        #accuracy = [label, stored]
+        accuracy_list.append(stored)
     return accuracy_list
 
+
+
+
+
+def main(label_type = "relations"):
+    start_time = datetime.now()
+
+    label_type = label_type
+
+    output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+    format_raw_annotations(label_type)
+    annotations_df = get_label_stats(label_type)
+    classification_accuracy_by_data_amount(label_type)
+    accuracy_scores = get_accuracy_metrics(label_type)
+
+    # save accuracy scores
+    accuracy_file = open(output_path+'/accuracy_scores.txt',"w")
+    for line in accuracy_scores:
+        accuracy_file.write("%s\n" % (str(line)))
+    accuracy_file.close()   
+
+    print(f'{str(datetime.now())}____Organization and accuracy testing time:____{str(datetime.now() - start_time)}\n')
+
+
+
+if __name__ == '__main__':
+    main(label_type = "relations")

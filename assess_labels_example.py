@@ -11,13 +11,13 @@ from annotation_functions import *
 label_type = "relations"
 
 # get file paths --> useful for double checking, but most functions already embed this function
-labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
+output_path, labels_file_path, annotations_path, output_csv_path = get_file_paths_for_label(label_type)
 
 # only need to run this after a new prodigy output --> reformats from json to csv, with labels properly formatted
 format_raw_annotations(label_type)
 
 # simple printout of label stats
-get_label_stats(get_label_stats)
+get_label_stats(label_type)
 
 # load annotations (what is created by format_raw_annotations())
 annotations_df = load_annotations(label_type)
