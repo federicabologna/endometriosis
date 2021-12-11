@@ -1,4 +1,4 @@
-from annotation_functions import *
+from label_functions import *
 
 # This script demonstrates how functions in annotations_functions can be used.
 # most of these functions are standalone and do not require that you've run them in order. 
