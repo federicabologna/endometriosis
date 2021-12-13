@@ -16,12 +16,6 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
-annotation_file_names = ['family_annotations.json']
-existing_csv_names = ['relationships.csv']
-output_file_name = 'combined_family.csv'
-key_col = 'FAMILY'
-
 def turn_jsons_into_df(file_name):
     annotations_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', file_name)
     annotations = []

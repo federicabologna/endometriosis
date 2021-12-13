@@ -7,6 +7,19 @@ from label_functions import *
 # and annotation output stored in:
 #    - endometriosis/labeling/prodigy/output
 
+
+
+# if you have csvs (from multi-category labels) already formatted (with format_raw_annotations) and 
+# you want to combine them with new, model-in-the-loop single label annotations,
+# the combine_multiple_jsons function can do this:
+annotation_file_names = ['partner_annotations.json']
+existing_csv_names = ['relationships.csv']
+output_file_name = 'combined_partner.csv'
+key_col = 'PARTNER'
+
+final_df = combine_multiple_jsons(annotation_file_names, existing_csv_names, output_file_name, key_col)
+
+
 # determine the type of label
 label_type = "relations"
 
