@@ -17,8 +17,51 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+annotation_file_names = ['family_annotations.json']
+existing_csv_names = ['relationships.csv']
+output_file_name = 'combined_family.csv'
+key_col = 'FAMILY'
+
+def turn_jsons_into_df(file_name):
+    annotations_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', file_name)
+    annotations = []
+    for line in open(annotations_path, 'r'):
+        annotations.append(json.loads(line))
+        annotations_df = pd.DataFrame(annotations)
+    return annotations_df
+
+def check_if_accept_present(df_cell):
+    value = np.where("accept" in df_cell, 1, 0)
+    return value
+
+### COMBINE MODEL IN THE LOOP WITH CATEGORY LABELS
+def combine_multiple_jsons(annotation_file_names, existing_csv_names, output_file_name, key_col):
+    input_path = os.getcwd()
+    annotations_df_0 = turn_jsons_into_df(file_name = annotation_file_names[0])
+    if len(annotation_file_names) > 1:
+        annotations_df_1 = turn_jsons_into_df(file_name = annotation_file_names[1])
+        frames = [annotations_df_0, annotations_df_1]
+        combined_frames = pd.concat(frames)
+    elif len(annotation_file_names) == 1:
+        combined_frames = annotations_df_0
+    combined_frames[combined_frames["answer"] != "ignore"]
+    combined_frames[key_col] = combined_frames["answer"].apply(check_if_accept_present)
+    combined_frames = combined_frames[['id','text', 'url', key_col]]
+
+    existing_annotations = pd.read_csv(os.path.join(input_path, 'labeling', 'prodigy', 'output', 'formatted_csvs', existing_csv_names[0]))
+    existing_annotations = existing_annotations[['id','text', 'url', key_col]]
+
+    final_combined_dfs = existing_annotations.append(combined_frames)
+    final_combined_dfs.to_csv(os.path.join(input_path, 'labeling', 'prodigy', 'output', 'formatted_csvs', output_file_name))
+
+    return final_combined_dfs
+
+
+final_df = combine_multiple_jsons(annotation_file_names, existing_csv_names, output_file_name, key_col)
+
 
 '''
+FOR CATEGORIES WITH MULTIPLE LABELS
 Get often used file paths by label type.
 
 Input:
