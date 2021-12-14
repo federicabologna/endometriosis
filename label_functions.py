@@ -16,7 +16,8 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-def turn_jsons_into_df(file_name):
+def turn_jsons_into_df(input_path, file_name):
+    input_path = os.getcwd()
     annotations_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', file_name)
     annotations = []
     for line in open(annotations_path, 'r'):
@@ -29,11 +30,10 @@ def check_if_accept_present(df_cell):
     return value
 
 ### COMBINE MODEL IN THE LOOP WITH CATEGORY LABELS
-def combine_multiple_jsons(annotation_file_names, existing_csv_names, output_file_name, key_col):
-    input_path = os.getcwd()
-    annotations_df_0 = turn_jsons_into_df(file_name = annotation_file_names[0])
+def combine_multiple_jsons(input_path, annotation_file_names, existing_csv_names, output_file_name, key_col):
+    annotations_df_0 = turn_jsons_into_df(input_path, file_name = annotation_file_names[0])
     if len(annotation_file_names) > 1:
-        annotations_df_1 = turn_jsons_into_df(file_name = annotation_file_names[1])
+        annotations_df_1 = turn_jsons_into_df(input_path, file_name = annotation_file_names[1])
         frames = [annotations_df_0, annotations_df_1]
         combined_frames = pd.concat(frames)
     elif len(annotation_file_names) == 1:
@@ -51,7 +51,14 @@ def combine_multiple_jsons(annotation_file_names, existing_csv_names, output_fil
     return final_combined_dfs
 
 
-final_df = combine_multiple_jsons(annotation_file_names, existing_csv_names, output_file_name, key_col)
+annotation_file_names = ['negligence_annotations-0.jsonl', 'negligence_annotations-1.jsonl']
+existing_csv_names = ['topics.csv']
+output_file_name = 'combined_negligence.csv'
+key_col = 'PERCEIVED NEGLIGENCE'
+input_path = os.getcwd()
+
+final_df = combine_multiple_jsons(input_path, annotation_file_names, existing_csv_names, output_file_name, key_col)
+
 
 
 '''
