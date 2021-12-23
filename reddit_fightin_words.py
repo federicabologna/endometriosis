@@ -20,6 +20,7 @@ def cleaning_docs(df, df_ids, df_docs):
     clean_docs = []
 
     lemmatizer = WordNetLemmatizer()
+    stopwords = set([line.strip() for line in open("stoplist_final.txt")])
     n_tokxdoc = []
     vocab = set()
     for index, row in df.iterrows():
@@ -30,10 +31,10 @@ def cleaning_docs(df, df_ids, df_docs):
         tokenized = nltk.word_tokenize(lowercase)  # list of tokens
         for token in tokenized:
             token = re.sub(r'[^\w\s\d]', '', token)  # remove punctuation from token
-            #if token and token not in stopwords:  # if token is not empty and is not in stopwords
-            token = lemmatizer.lemmatize(token)  # lemmatize token
-            clean_doc.append(token)
-            vocab.add(token)
+            if token and token not in stopwords:  # if token is not empty and is not in stopwords
+                token = lemmatizer.lemmatize(token)  # lemmatize token
+                clean_doc.append(token)
+                vocab.add(token)
         n_tokxdoc.append(len(clean_doc))
         clean_doc = ' '.join(clean_doc)
         if clean_doc:
@@ -73,8 +74,8 @@ def bayes_compare_language(l1, l2, output_path, ngram=1, prior=.01, cv=None, sig
         print("If using a non-uniform prior:")
         print("Please also pass a count vectorizer with the vocabulary parameter set.")
         quit()
-    l1 = [basic_sanitize(l) for l in l1]
-    l2 = [basic_sanitize(l) for l in l2]
+    #l1 = [basic_sanitize(l) for l in l1]
+    #l2 = [basic_sanitize(l) for l in l2]
     if cv is None:
         cv = CV(decode_error = 'ignore', min_df = 10, max_df = .5, ngram_range=(1,ngram),
                 binary = False,
@@ -113,7 +114,7 @@ def bayes_compare_language(l1, l2, output_path, ngram=1, prior=.01, cv=None, sig
     x_vals = count_matrix.sum(axis=0)
     y_vals = z_scores
     sizes = abs(z_scores) * 2
-    neg_color, pos_color, insig_color = ('blue', 'purple', 'grey')
+    neg_color, pos_color, insig_color = ('#340509', '#053430', '#d8d8d8')
     colors = []
     annots = []
     for i, y in enumerate(y_vals):
@@ -127,37 +128,53 @@ def bayes_compare_language(l1, l2, output_path, ngram=1, prior=.01, cv=None, sig
             colors.append(insig_color)
             annots.append(None)
 
-    plt.figure(figsize=(18,18))
-    fig, ax = plt.subplots()
-    ax.scatter(x_vals, y_vals, c=colors, linewidth=0, alpha = 0.3)
+    
+    fig, ax = plt.subplots(figsize=(14,14))
+    ax.scatter(x_vals, y_vals, c=colors, linewidth=0, alpha = 0.4)
 
     for i, annot in enumerate(annots):
         if annot is not None:
-            if np.abs(y_vals[i]) > 4:
-                ax.annotate(annot, (x_vals[i], y_vals[i]), color='black', fontsize=6)
+            if np.abs(y_vals[i]) > 5:
+                ax.annotate(annot, (x_vals[i], y_vals[i]), color='black', fontsize=12)
 
     ax.set_xscale('log')
+    plt.xlabel("Word Frequency")
+    plt.ylabel("z-score (log scale)")
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
     
-    plt.savefig(os.path.join(output_path, 'fightin_words.pdf'))
+    plt.savefig(os.path.join(output_path, 'fightin_words.png'), dpi = 300)
 
     return return_list
 
 
-def main(subreddit_1, subreddit_2):
-
-    output_path = os.path.join(os.getcwd(), 'output', f'{subreddit_1}'+ '_vs_' + f'{subreddit_2}')
+def main(subreddit_1, subreddit_2, type = "reddit"):
+    if type == "reddit":
+        output_path = os.path.join(os.getcwd(), 'fightin_words', f'{subreddit_1}'+ '_vs_' + f'{subreddit_2}')
+    else:
+        output_path = os.path.join(os.getcwd(), 'predictions', f'{subreddit_1}'+ '_vs_' + f'{subreddit_2}')
 
     # GET TWO CLASSES OF DOCUMENTS TO COMPARE
-    document_1 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_1}.csv')
-    document_2 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_2}.csv')
+    if type == "reddit":
+        document_1 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_1}.csv')
+        document_2 = os.path.join(os.getcwd(), 'reddit', 'posts', f'{subreddit_2}.csv')
+
+    else:
+        document_1 = os.path.join(os.getcwd(), 'predictions', f'{subreddit_1}.csv')
+        document_2 = os.path.join(os.getcwd(), 'predictions', f'{subreddit_2}.csv')
 
     df_1 = pd.read_csv(document_1, index_col=0)
     df_2 = pd.read_csv(document_2, index_col=0)
 
     #PRE PROCESS DATA
     start = datetime.now()
-    post_ids_1, clean_posts_1 = cleaning_docs(df_1, 'id', 'selftext')
-    post_ids_2, clean_posts_2 = cleaning_docs(df_2, 'id', 'selftext')
+    if type == "reddit":
+        post_ids_1, clean_posts_1 = cleaning_docs(df_1, 'id', 'selftext')
+        post_ids_2, clean_posts_2 = cleaning_docs(df_2, 'id', 'selftext')
+    else:
+        post_ids_1, clean_posts_1 = cleaning_docs(df_1, 'id', 'text')
+        post_ids_2, clean_posts_2 = cleaning_docs(df_2, 'id', 'text')
+
     print(str(datetime.now()) + f'Data cleaning time: ' + str(datetime.now() - start))
 
     list_1 = clean_posts_1
@@ -174,6 +191,6 @@ def main(subreddit_1, subreddit_2):
 # RUNNING MAIN WILL CLEAN TWO DATASETS, PERFORM FIGHTIN WORDS, AND OUTPUT A CSV WITH WORD-ZSCORE PAIR AND PLOTTED RESULTS
 
 if __name__ == '__main__':
-    main('endometriosis', 'pcos')
+    main('personal_relations_only', 'support_community_only', type = 'pre-processed')
 
 
