@@ -16,6 +16,21 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+'''
+Simple function to turn jsons into dataframes.  
+
+Input:
+    - json or jsonl file path
+    - json or jsonl file name
+
+Output:
+    annotations_df: dataframe of json data
+
+Note: built specifically for prodigy output
+
+'''
+
 def turn_jsons_into_df(input_path, file_name):
     input_path = os.getcwd()
     annotations_path = os.path.join(input_path, 'labeling', 'prodigy', 'output', file_name)
@@ -25,11 +40,39 @@ def turn_jsons_into_df(input_path, file_name):
         annotations_df = pd.DataFrame(annotations)
     return annotations_df
 
+
+'''
+Simple function to change another column's cell value to 1 or 0 based on presence of accept.  
+
+Input:
+    - dataframe cell 
+
+Output:
+    - 0 or 1 value
+
+Note: This function is expected to be used in a .apply() function, as done below in combine_multiple_jsons()
+
+'''
+
 def check_if_accept_present(df_cell):
     value = np.where("accept" in df_cell, 1, 0)
     return value
 
-### COMBINE MODEL IN THE LOOP WITH CATEGORY LABELS
+
+'''
+Combine labels from formatted/combined csvs with periodic updates from model-in-the-loop label specific annotations.
+
+Input:
+    - input path: point to where new annotations are held
+    - annotation_file_names: json or jsonl file names for new labels
+    - existing_csv_names: pre-formatted csvs (may have multiple labels present)
+    - key_col: column name in CSVs that new annotations match to 
+
+Output:
+    final_combined_dfs: df with combined annotations from csvs and jsons; only holds one key label
+
+'''
+
 def combine_multiple_jsons(input_path, annotation_file_names, existing_csv_names, output_file_name, key_col):
     annotations_df_0 = turn_jsons_into_df(input_path, file_name = annotation_file_names[0])
     if len(annotation_file_names) > 1:
@@ -51,13 +94,6 @@ def combine_multiple_jsons(input_path, annotation_file_names, existing_csv_names
     return final_combined_dfs
 
 
-annotation_file_names = ['negligence_annotations-0.jsonl', 'negligence_annotations-1.jsonl']
-existing_csv_names = ['topics.csv']
-output_file_name = 'combined_negligence.csv'
-key_col = 'PERCEIVED NEGLIGENCE'
-input_path = os.getcwd()
-
-final_df = combine_multiple_jsons(input_path, annotation_file_names, existing_csv_names, output_file_name, key_col)
 
 
 
@@ -301,7 +337,6 @@ def get_accuracy_metrics(label_type = "relations"):
         y = annotations_df[label]
         stored = cross_validate(lr, X, y, cv=5, scoring=['precision', 'f1', 'recall'])
         stored["label_name"] = label
-        #accuracy = [label, stored]
         accuracy_list.append(stored)
     return accuracy_list
 

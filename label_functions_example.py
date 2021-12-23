@@ -12,6 +12,7 @@ from label_functions import *
 # if you have csvs (from multi-category labels) already formatted (with format_raw_annotations) and 
 # you want to combine them with new, model-in-the-loop single label annotations,
 # the combine_multiple_jsons function can do this:
+
 annotation_file_names = ['negligence_annotations-0.jsonl', 'negligence_annotations-1.jsonl']
 existing_csv_names = ['topics.csv']
 output_file_name = 'combined_negligence.csv'
